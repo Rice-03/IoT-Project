@@ -21,7 +21,7 @@ We do **not** touch the database. Backend owns that. We finish when a clean, cal
 
 | Stage | What it does | File | Owner | Status |
 |---|---|---|---|---|
-| 1 | Connect to MQTT, receive readings, drop broken JSON | `mqtt_consumer.py` | [name] | Done |
+| 1 | Connect to MQTT, receive readings, drop broken JSON | `mqtt_consumer.py` | Raeez Ahmed | Done |
 | 2a | Cleaning: is the reading's **structure** OK? | `clean_structure.py` | [name] | To do |
 | 2b | Cleaning: are the **values** realistic? | `clean_values.py` | [name] | To do |
 | 3 | Calculations: heat index, dew point, absolute humidity, AQI | `calculations.py` | [name] | To do |
