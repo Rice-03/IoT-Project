@@ -1,0 +1,20 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+.venv/
+
+# Secrets (broker passwords etc. later on)
+.env
+
+# Data files generated when you run the code locally.
+# Only the small samples inside sample_data/ get committed.
+/*.jsonl
+
+# Editor / OS junk
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
