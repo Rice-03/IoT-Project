@@ -1,0 +1,1 @@
+{"line": 2, "reason": "missing 'id'", "reading": {"ts": "2026-09-27T15:37:13.066986+00:00", "temperature": 23.97, "humidity": 76.4, "pressure": 1012.0, "pm25": 8.6, "tvoc": 135, "eco2": 461, "co2": 465, "battery_v": 3.77, "lat": -33.9249, "lon": 18.4241, "altitude": 15.0, "received_at": "2026-09-27T15:37:13.073366+00:00", "source_topic": "sensors/device-01/readings"}}
