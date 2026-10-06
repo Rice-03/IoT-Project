@@ -1,2 +1,18 @@
-amqtt
+mqtt
+# Data pipeline -> TimescaleDB
+#   pip install -r requirements.txt
+
+# MQTT: data_pipeline.py (Stage 1 subscribe, Stage 4 publish) and live_capture.py
 paho-mqtt>=2.0
+
+# PostgreSQL driver for timescale_adapter.py
+psycopg2-binary>=2.9
+
+# Dashboard frontend: weather_app.py
+dash>=2.14
+plotly>=5.18
+
+# Password hashing for the login page (auth.py). Already pulled in by dash ->
+# flask, listed here so the dependency is not a surprise.
+werkzeug>=3.0
+Python>=3.11
