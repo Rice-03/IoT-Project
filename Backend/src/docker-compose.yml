@@ -1,0 +1,23 @@
+services:
+  # --- TimescaleDB (PostgreSQL + Timescale extension) ---
+  # Chosen on 17 Sep 2026 after the live comparison in DB/REMEMBER.md:
+  # idle CPU and ~30 MiB RAM, time_bucket()/continuous aggregates for the
+  # charts, and plain SQL joins for the other team's datasets.
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: iot_timescaledb
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: iot_user
+      # Compose reads TS_PASSWORD from the shell or from a .env file sitting
+      # next to this one (never commit .env). The :? form aborts the launch
+      # if it is missing rather than falling back to a weak default.
+      POSTGRES_PASSWORD: ${TS_PASSWORD:?TS_PASSWORD is not set - put it in .env or export it first}
+      POSTGRES_DB: iot_trust
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  timescaledb_data:
