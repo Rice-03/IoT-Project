@@ -207,6 +207,15 @@ def normalize_latest(record):
         ):
             result[target] = result["calculations"][source]
 
+    if result.get("true_aqi") is None:
+        for source in ("air_quality_index", "airQualityIndex"):
+            value = result.get(source)
+            if value is None:
+                value = (result.get("extra") or {}).get(source)
+            if value is not None:
+                result["true_aqi"] = value
+                break
+
     for key in PRIMARY_CALCULATIONS:
         if result.get(key) is None and result["calculations"].get(key) is not None:
             result[key] = result["calculations"][key]
