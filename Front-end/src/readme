@@ -1,1 +1,115 @@
+# Weather Monitoring Modular System (Frontend)
 
+A real-time IoT weather monitoring dashboard built with [Dash](https://dash.plotly.com/) / Plotly.
+In the repository this application is saved as **`app.py`**; on the Raspberry Pi it runs as
+`weather_app.py`. The two are the same application.
+
+The dashboard **only reads** from a TimescaleDB (PostgreSQL) database. It never writes sensor
+data — readings are produced by the pipeline (`data_pipeline.py`) and stored by
+`live_capture.py`.
+
+## Features
+
+- **Overview** — status banner per node plus the four derived metric cards:
+  heat index, dew point, absolute humidity and AQI (US EPA).
+- **Stations / Map** — Plotly scatter-map of every node with a location.
+  Online nodes are green and larger; offline nodes are dimmed. Nodes with no
+  lat/lon in their readings are omitted.
+- **Trends** — time-series charts of any calculation or sensor, with a
+  24 h / 168 h / 720 h range filter.
+- **Devices** — total / online / offline counts and a device table with
+  ONLINE status pill, WiFi / MQTT connection pills and last-message time.
+- **Alerts** — filterable alert/event list (currently an empty state until an
+  alert source exists).
+- **Account** — "signed in as" details and a change-password form.
+- **Authentication** — login page backed by `auth.py`; the username is the
+  student number and passwords are stored **hashed (PBKDF2)** in the same
+  database. No dashboard data is rendered to a signed-out browser.
+
+## Requirements
+
+- Python 3.9+
+- A running TimescaleDB (or MySQL/Influx/other adapter if `config.get_db()` is
+  pointed at one) containing at least:
+  - a `readings` table (hypertable) with columns `node_id`, `time` and the
+    sensor/calculation columns the dashboard queries, and
+  - a `users` table for logins.
+- Dependencies:
+
+```bash
+pip install dash plotly psycopg2-binary werkzeug
+```
+
+`requirements.txt` in this repository already lists everything (including
+`paho-mqtt`, which only the pipeline needs).
+
+## Quick start
+
+```bash
+pip install -r requirements.txt
+
+# point the app at the database (see config.py — the password is required)
+export TS_HOST=localhost
+export TS_PORT=5432
+export TS_DB=iot_trust
+export TS_USER=iot_user
+export TS_PASSWORD=your_password
+
+python app.py            # or: python weather_app.py
+```
+
+Open <http://localhost:5000> (or `http://<server-ip>:5000` from any browser).
+
+## Environment variables
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `TS_HOST` | `localhost` | Database host (read by `config.py`) |
+| `TS_PORT` | `5432` | Database port |
+| `TS_DB` | `iot_trust` | Database name |
+| `TS_USER` | `iot_user` | Database user |
+| `TS_PASSWORD` | *(required)* | Database password |
+| `DB_CHOICE` | `timescale` | Backend label shown in the sidebar |
+| `LOOKBACK_HOURS` | `24` | How far back history queries go |
+| `OFFLINE_AFTER_S` | `60` | Seconds without a reading before a node is "offline" |
+| `REFRESH_MS` | `5000` | Dashboard auto-refresh interval (ms) |
+| `CACHE_TTL_S` | `2` | Server-side DB query throttle (s) |
+| `PORT` | `5000` | Dash server port |
+| `SECRET_KEY` | generated | Session signing key; set it so sessions survive restarts (`auth.py`) |
+
+## Student logins
+
+Run `seed_users.py` once to load the class list into the `users` table
+(it only inserts accounts that don't exist):
+
+```bash
+python seed_users.py            # add missing accounts
+python seed_users.py --show     # list accounts + whether they changed their password
+```
+
+- Username: the student number (e.g. `444444`).
+- First password: `$XY<student_number>&` (e.g. `$XY444444&`).
+- Students change their own password under **Account** (needs the current
+  password, minimum 8 characters).
+- `--reset-passwords` puts everyone back on the default.
+
+## Project structure (files the frontend depends on)
+
+| File | Role |
+|---|---|
+| `app.py` / `weather_app.py` | The Dash application: layout, routing, pages, callbacks |
+| `auth.py` | Login accounts, hashing, session helpers |
+| `config.py` | DB connection config; `get_db()` returns the adapter |
+| `timescale_adapter.py` | `readings` schema, insert/query methods the dashboard calls |
+| `seed_users.py` | Loads `class_list.csv` into `users` |
+
+## Notes / known behaviour
+
+- Every page callback checks the session; signed-out requests receive the login
+  card and **no** readings, node names or derived values.
+- The Map page plots a node only when it has `lat`/`lon` (from its latest
+  reading). If the database stores none, the map shows an empty state.
+- WiFi / MQTT pills show "—" when the schema has no `wifi`/`rssi` columns —
+  those normally live on the ESP node's `diagnostics` topic, which is not yet
+  ingested.
+- The Alerts page returns an empty state until a real alert source exists.
