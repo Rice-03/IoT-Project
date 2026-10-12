@@ -46,7 +46,7 @@ WHAT WAS CHANGED IN THE ORIGINAL CODE (and why)
 #
 #   STAGE 1: MQTT CONNECTION
 #   Original file: mqtt_consumer.py
-#   Owner: ______________________
+#   Owner: Raeez 
 #
 ##############################################################################
 
@@ -171,7 +171,7 @@ class MQTTConsumer:
 #
 #   STAGE 2a: STRUCTURAL VALIDATION
 #   Original file: clean_structure.py
-#   Owner: ______________________
+#   Owner: Eyethu
 #
 ##############################################################################
 
@@ -509,7 +509,7 @@ def process_file_2a(
 #
 #   STAGE 2b: VALUE VALIDATION
 #   Original file: clean_values.py
-#   Owner: ______________________
+#   Owner: Siya
 #
 ##############################################################################
 
@@ -643,7 +643,7 @@ def process_file_2b(
 #
 #   STAGE 3: CALCULATIONS
 #   Original file: calculations.py
-#   Owner: ______________________
+#   Owner: Joelle
 #
 ##############################################################################
 
@@ -856,7 +856,7 @@ def _run_self_tests():
 #
 #   STAGE 4: WIRING + HANDOFF TO BACKEND  (ADDED, not from any teammate)
 #   Original file: new
-#   Owner: ______________________
+#   Initial wiring of all files by Raeez 
 #
 ##############################################################################
 
