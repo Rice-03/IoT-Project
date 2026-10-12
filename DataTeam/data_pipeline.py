@@ -854,9 +854,9 @@ def _run_self_tests():
 
 ##############################################################################
 #
-#   STAGE 4: WIRING + HANDOFF TO BACKEND  (ADDED, not from any teammate)
+#   STAGE 4: WIRING + HANDOFF TO BACKEND
 #   Original file: new
-#   Initial wiring of all files by Raeez 
+#   Initial wiring of all files by Raeez updated by Backend team
 #
 ##############################################################################
 
